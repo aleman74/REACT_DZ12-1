@@ -1,38 +1,58 @@
-.App {
+#container {
+  margin: 100px;
+}
+
+#result {
+  margin: 10px;
+}
+
+.error {
+  background-color: lightpink;
+  color: red;
+  width: 300px;
+  text-align: center;
+  padding: 4px;
+}
+
+/* spinner */
+.cssload-container {
+  width: 200px;
+  height: 49px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.cssload-zenith {
+  width: 49px;
+  height: 49px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  box-shadow: 3px 3px 1px rgb(255,0,0);
+  animation: cssload-spin 690ms infinite linear;
+  -o-animation: cssload-spin 690ms infinite linear;
+  -ms-animation: cssload-spin 690ms infinite linear;
+  -webkit-animation: cssload-spin 690ms infinite linear;
+  -moz-animation: cssload-spin 690ms infinite linear;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+@keyframes cssload-spin {
+  100%{ transform: rotate(360deg); transform: rotate(360deg); }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+@-o-keyframes cssload-spin {
+  100%{ -o-transform: rotate(360deg); transform: rotate(360deg); }
 }
 
-.App-link {
-  color: #61dafb;
+@-ms-keyframes cssload-spin {
+  100%{ -ms-transform: rotate(360deg); transform: rotate(360deg); }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@-webkit-keyframes cssload-spin {
+  100%{ -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-moz-keyframes cssload-spin {
+  100%{ -moz-transform: rotate(360deg); transform: rotate(360deg); }
 }
