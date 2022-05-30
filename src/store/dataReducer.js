@@ -5,7 +5,9 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
     items: [],
     loading: false,
-    error: null
+    error: null,
+
+    search: ''
 };
 
 
@@ -18,7 +20,7 @@ const dataReducer = createSlice({
         dataReducer_search_start(state, action)
         {
             console.log('dataReducer_search_start', action.payload);
-            state = {...state, loading: true, error: null}
+            state = {...state, loading: true, error: null, search: action.payload.search}
 
             return state;
         },
@@ -51,6 +53,10 @@ const dataReducer = createSlice({
     },
 });
 
+
+export const set_dataReducer_param_search = (text_search) => (
+    {search: text_search}
+);
 export const set_dataReducer_param_success = (items) => (
     {items: items}
 );

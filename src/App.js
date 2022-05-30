@@ -1,15 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
-import Search from "./components/Search";
 import {Provider} from "react-redux";
 import appStore from './store/store';
+
+import Search from "./components/Search";
+import Search2 from "./components/Search2";
 
 
 function App() {
   return (
       <Provider store={appStore}>
           <div id="container">
-            <Search />
+            <Search2 />
           </div>
       </Provider>
   );

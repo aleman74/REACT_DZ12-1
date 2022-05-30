@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import dataReducer, {
     dataReducer_search_failure,
-    dataReducer_search_start,
-    dataReducer_search_success,
-    set_dataReducer_param_failure,
+    dataReducer_search_start, dataReducer_search_success,
+    set_dataReducer_param_failure, set_dataReducer_param_search,
     set_dataReducer_param_success
 } from "../store/dataReducer";
 import {searchItem} from "../actions/searchItem";
@@ -33,54 +32,11 @@ class Search extends Component {
     onChange(event) {
         this.setState({text: event.target.value});
 
+        // Запускаем epic
+        this.props.dataReducer_search_start(event.target.value);
     }
 
     componentDidMount() {
-        // Создаём входящий поток
-        const html_item = document.getElementById('my_input');
-        this.inputStream$ = fromEvent(html_item, 'input');
-
-        this.subscribe = this.inputStream$.pipe(
-            map(o => {                   // на вход html элемент
-//                console.log('step 1', {o});
-                return o.target.value;
-            }),
-//            filter(o => o.trim().length > 2),       // фильтруем значения
-            debounceTime(100),                  // значение генерируется не чаще 1 раза в 100 мс
-
-            map(o => {
-                this.props.dataReducer_search_start();
-                return new URLSearchParams({q: o});
-            }),      // подготавливаем параметры в http запросе
-
-            switchMap(o => ajax.getJSON(process.env.REACT_APP_API_URL + '?' + o).pipe(        // запускаем новый поток
-//                retry(3),                                  // 3 попытки выполнить запрос
-                map(o => o.map(v => v.name)),       // Возвращаем не весь объект, а только одно поле
-                catchError(ex => {
-//                    of(console.log('error_handler', {ex}, ex.status, ex.request.url));
-                    return of(this.props.dataReducer_search_failure(ex.message));
-                }),
-            )),
-
-        ).subscribe({
-//            next: value => (value) ? console.log('next', value) : console.log('next', 'none'),
-            next: value => {
-                // Считаем, что успешный запрос обязательно должен вернуть массив
-                if (Array.isArray(value))
-                {
-                    // Если параметры поиска не заданы, то ничего не показываем
-                    if (this.state.text != '')
-                        this.props.dataReducer_search_success(value);
-                    else
-                        this.props.dataReducer_search_success([]);
-                }
-            },
-//            error: error => console.error('error', error),           // Не обработанная ошибка - поток остановился
-            error: error => (this.props.dataReducer_search_failure(error)),
-            complete: () => console.info('complete')
-        });
-
-
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -88,9 +44,6 @@ class Search extends Component {
     }
 
     componentWillUnmount() {
-
-//        console.log('componentWillUnmount', this.subscribe);
-        this.subscribe.unsubscribe();
     }
 
     render() {
@@ -117,13 +70,13 @@ class Search extends Component {
                     <input id="my_input" value={this.state.text} onChange={this.onChange} />
                     <div id="result">
                         <div className="cssload-container">
-                            <div className="cssload-zenith"></div>
+                            <div className="cssload-zenith" />
                         </div>
                     </div>
                 </>
             );
 
-        if (this.state.text == '')
+        if (this.state.text === '')
             return (
                 <>
                     <input id="my_input" value={this.state.text} onChange={this.onChange} />
@@ -163,8 +116,10 @@ const mapDispatchToProps = (dispatch, ownProps)  => {
             searchItem(dispatch, text)
         ,
 
-        dataReducer_search_start: () => dispatch(
-            dataReducer_search_start()
+        dataReducer_search_start: (text_search) => dispatch(
+            dataReducer_search_start(
+                set_dataReducer_param_search(text_search)
+            )
         ),
 
         dataReducer_search_success: (data) => dispatch(
